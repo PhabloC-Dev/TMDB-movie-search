@@ -1,0 +1,16 @@
+{
+  "name": "tmdb-search-2.0",
+  "version": "1.0.0",
+  "description": "Fullstack Movie Rating Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run dev --prefix frontend\" \"backend\\venv\\Scripts\\python backend\\app.py\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
