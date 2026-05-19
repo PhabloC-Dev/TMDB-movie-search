@@ -1,4 +1,3 @@
-//What a Movie object contains
 export interface Movie {
   id: number;
   title: string;
@@ -10,14 +9,12 @@ export interface Movie {
   cast?: CastMember[];
 }
 
-//What an Actor/Cast member looks like
 export interface CastMember {
   cast_id: number;
   name: string;
   character: string;
 }
 
-//Rating
 export interface RatedMovie {
   id: number;
   title: string;

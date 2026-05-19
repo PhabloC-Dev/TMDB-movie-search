@@ -3,11 +3,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 import requests
 from database import get_conn, close_conn
-
-# 👇 Import the global cache manager instance
 from movie_cache import tmdb_cache
 
-# Load .env from project root
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
@@ -17,21 +14,15 @@ TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 def search_movies(query: str, page: int = 1):
     if not query:
         return {"results": [], "total_pages": 1}
-
-    # 1. Create a unique cache key for this query combination
     cache_key = f"search:{query}:page:{page}"
-    
-    # 2. Return cached response if available
     cached_res = tmdb_cache.get(cache_key)
     if cached_res is not None:
         return cached_res
 
-    # 3. Cache Miss: Make the outbound API call
     url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&query={query}&page={page}"
     resp = requests.get(url)
     data = resp.json()
     
-    # 4. Save response data structure to cache before returning
     tmdb_cache.set(cache_key, data)
     return data
 
@@ -51,7 +42,6 @@ def movie_details(movie_id: int):
     tmdb_cache.set(cache_key, data)
     return data
 
-
 def movie_credits(movie_id: int):
     cache_key = f"movie:credits:{movie_id}"
     
@@ -66,8 +56,7 @@ def movie_credits(movie_id: int):
     
     tmdb_cache.set(cache_key, data)
     return data
-
-
+ 
 def rate_movie(data: dict):
     conn = None
     try:
@@ -192,7 +181,6 @@ def get_rated_movies(page: int = 1, search: str = "", rating: str = "all", genre
         return {"success": False, "error": str(e)}, 500
     finally:
         close_conn(conn)
-
 
 def delete_rating(movie_id: int):
     conn = None

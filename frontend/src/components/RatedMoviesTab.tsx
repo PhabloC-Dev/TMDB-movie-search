@@ -1,26 +1,14 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
 import { RatedFilters } from './RatedFilters';
-<<<<<<< HEAD
 import { type RatedMovie } from '../types';
-=======
-import { type Movie, type RatedMovie } from '../types';
-import { API_BASE_URL } from '../config';
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
 
 interface RatedMoviesTabProps {
   dbRatedMovies: RatedMovie[];
   filteredDatabaseMovies: RatedMovie[];
   userRatings: { [movieId: number]: number };
   setActiveTab: (tab: "search" | "rated") => void;
-<<<<<<< HEAD
-  
-  // Unified caching selection handler from App.tsx
   selectMovieById: (movie: any) => void;
-  
-=======
-  setSelectedMovie: (movie: Movie | null) => void;
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
   ratedSearchQuery: string;
   setRatedSearchQuery: (val: string) => void;
   ratedScoreFilter: number | "all";
@@ -29,7 +17,6 @@ interface RatedMoviesTabProps {
   setRatedSelectedGenre: (val: string) => void;
   ratedSelectedYear: string;
   setRatedSelectedYear: (val: string) => void;
-<<<<<<< HEAD
   
   dbPage: number;
   dbTotalPages: number;
@@ -48,13 +35,6 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
     props.ratedSelectedYear !== "";
 
   if (props.dbRatedMovies.length === 0 && !hasActiveFilters) {
-=======
-}
-
-export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
-  // Empty state handling
-  if (props.dbRatedMovies.length === 0) {
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
     return (
       <div className="text-center text-gray-400 text-lg mt-12 py-8 bg-gray-900/50 rounded-xl max-w-xl mx-auto border border-gray-800">
         <p className="mb-2">You haven't rated any movies yet!</p>
@@ -68,49 +48,24 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
     );
   }
 
-<<<<<<< HEAD
-=======
-  const handleSavedMovieClick = async (movie: RatedMovie) => {
-    try {
-      const movieRes = await fetch(`${API_BASE_URL}/movie/${movie.id}`);
-      const movieData = await movieRes.json();
-      
-      const creditsRes = await fetch(`${API_BASE_URL}/movie/${movie.id}/credits`);
-      const creditsData = await creditsRes.json();
-      
-      props.setSelectedMovie({ ...movieData, cast: creditsData.cast });
-    } catch (err) {
-      console.error("Error loading comprehensive movie metadata:", err);
-    }
-  };
-
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
   return (
     <div>
-      {/* --- RATED FILTER PANEL BAR --- */}
       <RatedFilters 
         ratedSearchQuery={props.ratedSearchQuery} setRatedSearchQuery={props.setRatedSearchQuery}
         ratedScoreFilter={props.ratedScoreFilter} setRatedScoreFilter={props.setRatedScoreFilter}
         ratedSelectedGenre={props.ratedSelectedGenre} setRatedSelectedGenre={props.setRatedSelectedGenre}
         ratedSelectedYear={props.ratedSelectedYear} setRatedSelectedYear={props.setRatedSelectedYear}
-<<<<<<< HEAD
         dbAllYears={props.dbAllYears}
         dbAllGenres={props.dbAllGenres}
-=======
-        dbRatedMovies={props.dbRatedMovies}
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
       />
 
-      {/* --- RATED MOVIES GRID SYSTEM --- */}
       {props.filteredDatabaseMovies.length === 0 ? (
         <p className="text-center text-gray-500 text-lg mt-8">No rated movies match your specific search criteria.</p>
       ) : (
-<<<<<<< HEAD
         <div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
             {props.filteredDatabaseMovies.map((movie) => (
               <div key={movie.id} className="relative group cursor-pointer">
-                {/* 👇 FIXED: Movie metadata object passed purely without hardcoded fields */}
                 <MovieCard 
                   movie={movie as any} 
                   onClick={() => props.selectMovieById(movie)}
@@ -123,7 +78,6 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
             ))}
           </div>
 
-          {/* --- PAGINATION BAR --- */}
           {props.dbTotalPages > 1 && (
             <div className="flex flex-col items-center justify-center space-y-2 mt-12 pt-6 border-t border-gray-900">
               <div className="text-sm text-gray-400">
@@ -149,25 +103,6 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
               </div>
             </div>
           )}
-=======
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {props.filteredDatabaseMovies.map((movie) => (
-            <div key={movie.id} className="relative group cursor-pointer">
-              <MovieCard 
-                movie={{
-                  id: movie.id, title: movie.title, poster_path: movie.poster_path,
-                  overview: "", release_date: movie.release_date || "", 
-                  genre_ids: movie.genre_ids || [], vote_average: 0
-                }}
-                onClick={() => handleSavedMovieClick(movie)}
-                ratingLabel={`Your rating: ${props.userRatings[movie.id]} ★`} 
-              />
-              <div className="absolute top-2 left-2 bg-purple-600/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded shadow-md pointer-events-none">
-                {props.userRatings[movie.id]} ★
-              </div>
-            </div>
-          ))}
->>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
         </div>
       )}
     </div>

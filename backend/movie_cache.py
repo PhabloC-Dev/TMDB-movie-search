@@ -25,5 +25,4 @@ class MovieCache:
             "expires_at": time.time() + self.expire_after_seconds
         }
 
-# Instantiate a single global instance for the controllers to share
 tmdb_cache = MovieCache(expire_after_seconds=600)

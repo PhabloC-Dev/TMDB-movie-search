@@ -13,7 +13,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, userRatings, onCl
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div className="bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto relative">
-        {/* Close button*/}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-white text-xl hover:text-red-500 cursor-pointer"
@@ -40,7 +39,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, userRatings, onCl
             </p>
             <p className="text-gray-200">{movie.overview}</p>
 
-            {/* Cast list */}
             {movie.cast && (
               <div className="mt-4">
                 <h3 className="text-lg font-bold mb-2">Cast</h3>
@@ -54,7 +52,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, userRatings, onCl
               </div>
             )}
 
-            {/* Rating Section */}
             <div className="mt-6 border-t border-gray-700 pt-4">
               <h3 className="text-lg font-bold mb-2">Give your rating</h3>
               <div className="flex space-x-2">
