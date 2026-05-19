@@ -2,6 +2,11 @@ import { useState } from "react";
 import { type Movie } from "../types";
 import { API_BASE_URL } from "../config";
 
+<<<<<<< HEAD
+=======
+//Everything related to the TMDB API search tab.
+
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
 export function useSearchCatalog() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Movie[]>([]);
@@ -9,6 +14,7 @@ export function useSearchCatalog() {
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [searchedQuery, setSearchedQuery] = useState("");
+<<<<<<< HEAD
   const [searchPage, setSearchPage] = useState(1);
   const [searchTotalPages, setSearchTotalPages] = useState(1);
 
@@ -31,6 +37,16 @@ export function useSearchCatalog() {
       setResults(data.results || []);
       setSearchTotalPages(data.total_pages || 1);
       setSearchedQuery(query);
+=======
+
+  const searchMovies = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/search?q=${query}`);
+      const data = await res.json();
+      setResults(data.results || []);
+      setSearchedQuery(query); 
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
     } finally {
       setLoading(false);
     }
@@ -50,10 +66,14 @@ export function useSearchCatalog() {
     selectedYear, setSelectedYear,
     searchMovies,
     filteredResults,
+<<<<<<< HEAD
     searchedQuery,
     // 👇 Expose these to App.tsx
     searchPage,
     searchTotalPages,
     setSearchPage
+=======
+    searchedQuery 
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
   };
 }

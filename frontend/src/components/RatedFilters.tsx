@@ -1,4 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
+=======
+import { type RatedMovie } from '../types';
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
 
 interface RatedFiltersProps {
   ratedSearchQuery: string;
@@ -9,6 +13,7 @@ interface RatedFiltersProps {
   setRatedSelectedGenre: (val: string) => void;
   ratedSelectedYear: string;
   setRatedSelectedYear: (val: string) => void;
+<<<<<<< HEAD
   dbAllYears: string[];
   dbAllGenres: number[];
 }
@@ -36,11 +41,17 @@ const GENRE_MAP: { [key: number]: string } = {
   37: "Western"
 };
 
+=======
+  dbRatedMovies: RatedMovie[];
+}
+
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
 export const RatedFilters: React.FC<RatedFiltersProps> = ({
   ratedSearchQuery, setRatedSearchQuery,
   ratedScoreFilter, setRatedScoreFilter,
   ratedSelectedGenre, setRatedSelectedGenre,
   ratedSelectedYear, setRatedSelectedYear,
+<<<<<<< HEAD
   
   // 👇 2. DESTRUCTURE THE NEW ARRAYS HERE
   dbAllYears,
@@ -50,6 +61,21 @@ export const RatedFilters: React.FC<RatedFiltersProps> = ({
   return (
     <div className="flex flex-col md:flex-row items-stretch gap-4 bg-gray-900 p-4 rounded-lg border border-gray-800 mb-8">
       {/* --- TITLE TEXT SEARCH FIELD --- */}
+=======
+  dbRatedMovies
+}) => {
+
+const availableYears = Array.from(
+    new Set(
+      dbRatedMovies
+        .map(movie => movie.release_date?.substring(0, 4))
+        .filter(Boolean)
+    )
+).sort((a, b) => (b || "").localeCompare(a || ""));
+
+  return (
+    <div className="flex flex-col md:flex-row items-stretch gap-4 bg-gray-900 p-4 rounded-lg border border-gray-800 mb-8">
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
       <div className="flex-1 min-w-[280px]">
         <input
           type="text" placeholder="Search your rated list by title..." value={ratedSearchQuery}
@@ -58,7 +84,10 @@ export const RatedFilters: React.FC<RatedFiltersProps> = ({
         />
       </div>
       
+<<<<<<< HEAD
       {/* --- SCORE RATING SELECTION --- */}
+=======
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
       <div className="w-full md:w-48">
         <select
           value={ratedScoreFilter} onChange={(e) => setRatedScoreFilter(e.target.value === "all" ? "all" : Number(e.target.value))}
@@ -73,6 +102,7 @@ export const RatedFilters: React.FC<RatedFiltersProps> = ({
         </select>
       </div>
 
+<<<<<<< HEAD
       {/* --- GENRE FILTER DROPDOWN --- */}
       <div className="w-full md:w-48">
         <select value={ratedSelectedGenre} onChange={(e) => setRatedSelectedGenre(e.target.value)} className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-purple-500 cursor-pointer text-sm">
@@ -96,6 +126,27 @@ export const RatedFilters: React.FC<RatedFiltersProps> = ({
               {year}
             </option>
           ))}
+=======
+      <div className="w-full md:w-48">
+        <select value={ratedSelectedGenre} onChange={(e) => setRatedSelectedGenre(e.target.value)} className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-purple-500 cursor-pointer text-sm">
+          <option value="">All Genres</option>
+          <option value="28">Action</option>
+          <option value="35">Comedy</option>
+          <option value="18">Drama</option>
+          <option value="27">Horror</option>
+          <option value="878">Sci-Fi</option>
+        </select>
+      </div>
+
+      <div className="w-full md:w-40">
+        <select value={ratedSelectedYear} onChange={(e) => setRatedSelectedYear(e.target.value)} className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-purple-500 cursor-pointer text-sm">
+          <option value="">All Years</option>
+          {availableYears.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
         </select>
       </div>
     </div>

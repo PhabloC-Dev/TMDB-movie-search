@@ -1,5 +1,9 @@
 node_modules
+<<<<<<< HEAD
 .env
 backend/__pycache__/
 docker-data/
 
+=======
+backend/.env
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec

@@ -14,6 +14,7 @@ export function useMovies() {
 
   const selectMovieById = async (movie: Movie) => {
     setModalLoading(true);
+<<<<<<< HEAD
     // Optimistically set the initial data so the modal opens immediately with a loader
     setSelectedMovie(movie); 
 
@@ -40,6 +41,16 @@ export function useMovies() {
       });
     } catch (err) {
       console.error("Error fetching comprehensive movie details:", err);
+=======
+    setSelectedMovie(movie); 
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/movie/${movie.id}/credits`);
+      const data = await res.json();
+      setSelectedMovie({ ...movie, cast: data.cast });
+    } catch (err) {
+      console.error("Error fetching credits details:", err);
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
     } finally {
       setModalLoading(false);
     }

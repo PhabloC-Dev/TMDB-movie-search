@@ -10,6 +10,7 @@ interface SearchBarProps {
   setSelectedYear: (val: string) => void;
 }
 
+<<<<<<< HEAD
 // 1. OFFICIAL TMDB MOVIE GENRE LIST (Static and comprehensive)
 const TMDB_CATALOG_GENRES = [
   { id: 28, name: "Action" },
@@ -47,6 +48,8 @@ const generateCatalogYears = () => {
 
 const AVAILABLE_YEARS = generateCatalogYears();
 
+=======
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
 export const SearchBar: React.FC<SearchBarProps> = ({
   query, setQuery, onSearch,
   selectedGenre, setSelectedGenre,
@@ -56,7 +59,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div className="space-y-4 mb-8">
       <div className="flex flex-col md:flex-row items-stretch gap-4 bg-gray-900 p-4 rounded-lg border border-gray-800">
         
+<<<<<<< HEAD
         {/* Step 1: text input box */}
+=======
+        {/* Step 1:text input box*/}
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
         <div className="flex-1 min-w-[280px]">
           <input
             type="text"
@@ -67,12 +74,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 onSearch();
               }
             }}
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
             placeholder="Search catalog by title..."
             className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500 text-sm"
           />
         </div>
 
+<<<<<<< HEAD
         {/* Step 2: Genre Dropdown Selector (Dynamic) */}
+=======
+        {/* Step 2: Genre Dropdown Selector */}
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
         <div className="w-full md:w-48">
           <select
             value={selectedGenre}
@@ -80,6 +95,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
           >
             <option value="">All Genres</option>
+<<<<<<< HEAD
             {/* 👇 Mapping dynamically through full TMDB Genre catalog options */}
             {TMDB_CATALOG_GENRES.map((genre) => (
               <option key={genre.id} value={genre.id}>
@@ -90,6 +106,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </div>
 
         {/* Step 3: Year Dropdown Selector (Dynamic) */}
+=======
+            <option value="28">Action</option>
+            <option value="35">Comedy</option>
+            <option value="18">Drama</option>
+            <option value="27">Horror</option>
+            <option value="878">Sci-Fi</option>
+          </select>
+        </div>
+
+        {/* Step 3: Year Dropdown Selector */}
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
         <div className="w-full md:w-40">
           <select
             value={selectedYear}
@@ -97,12 +124,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
           >
             <option value="">All Years</option>
+<<<<<<< HEAD
             {/* 👇 Mapping dynamically through calculated chronological loop listing */}
             {AVAILABLE_YEARS.map((year) => (
               <option key={year} value={year}>
                 {year}
               </option>
             ))}
+=======
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
           </select>
         </div>
 
@@ -112,7 +147,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <button
               type="button"
               onClick={() => { setSelectedGenre(""); setSelectedYear(""); }}
+<<<<<<< HEAD
               className="px-2.5 bg-gray-800 hover:bg-red-900/30 text-gray-400 hover:text-red-400 rounded-md border border-gray-700 transition-colors text-sm flex items-center justify-center cursor-pointer"
+=======
+              className="px-2.5 bg-gray-800 hover:bg-red-900/30 text-gray-400 hover:text-red-400 rounded-md border border-gray-700 transition-colors text-sm"
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
               title="Clear active filter dropdowns"
             >
               ❌
@@ -121,7 +160,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           
           <button
             onClick={onSearch}
+<<<<<<< HEAD
             className="flex-1 bg-blue-600 rounded-md font-bold hover:bg-blue-700 transition-colors text-sm shadow-md py-2.5 text-center px-4 cursor-pointer"
+=======
+            className="flex-1 bg-blue-600 rounded-md font-bold hover:bg-blue-700 transition-colors text-sm shadow-md py-2.5 text-center px-4"
+>>>>>>> 6055484d4ec3175b56593bcab86dbf2858f653ec
           >
             Search
           </button>
