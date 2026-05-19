@@ -2,8 +2,6 @@ import { useState } from "react";
 import { type Movie } from "../types";
 import { API_BASE_URL } from "../config";
 
-//Everything related to the TMDB API search tab.
-
 export function useSearchCatalog() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Movie[]>([]);
@@ -11,14 +9,28 @@ export function useSearchCatalog() {
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [searchedQuery, setSearchedQuery] = useState("");
+  const [searchPage, setSearchPage] = useState(1);
+  const [searchTotalPages, setSearchTotalPages] = useState(1);
 
-  const searchMovies = async () => {
+  // Trigger search when query OR page changes
+  const searchMovies = async (pageNumber: number = 1) => {
+    if (!query) return;
     setLoading(true);
+    setSearchPage(pageNumber);
     try {
-      const res = await fetch(`${API_BASE_URL}/search?q=${query}`);
+      // 👇 Pass the page number to your backend /search endpoint
+      const res = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}&page=${pageNumber}`);
+      if (!res.ok) {
+        console.error('Search request failed:', res.status, res.statusText);
+        setResults([]);
+        setSearchTotalPages(1);
+        return;
+      }
       const data = await res.json();
+
       setResults(data.results || []);
-      setSearchedQuery(query); 
+      setSearchTotalPages(data.total_pages || 1);
+      setSearchedQuery(query);
     } finally {
       setLoading(false);
     }
@@ -38,6 +50,10 @@ export function useSearchCatalog() {
     selectedYear, setSelectedYear,
     searchMovies,
     filteredResults,
-    searchedQuery 
+    searchedQuery,
+    // 👇 Expose these to App.tsx
+    searchPage,
+    searchTotalPages,
+    setSearchPage
   };
 }

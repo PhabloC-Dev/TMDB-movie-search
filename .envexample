@@ -1,0 +1,4 @@
+TMDB_API_KEY=Your TMDB API Key Here
+DB_NAME=Your Database Name Here
+DB_USER=Your Username Here
+DB_PASSWORD=Your Password Here

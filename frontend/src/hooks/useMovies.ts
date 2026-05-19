@@ -14,14 +14,32 @@ export function useMovies() {
 
   const selectMovieById = async (movie: Movie) => {
     setModalLoading(true);
+    // Optimistically set the initial data so the modal opens immediately with a loader
     setSelectedMovie(movie); 
 
     try {
-      const res = await fetch(`${API_BASE_URL}/movie/${movie.id}/credits`);
-      const data = await res.json();
-      setSelectedMovie({ ...movie, cast: data.cast });
+      // 1. 👇 FETCH THE FULL TMDB DETAILS (This hits your backend Python cache!)
+      const detailRes = await fetch(`${API_BASE_URL}/movie/${movie.id}`);
+      const fullMovieData = await detailRes.json();
+
+      // 2. FETCH THE CREDITS (Also hits your backend Python cache!)
+      const creditsRes = await fetch(`${API_BASE_URL}/movie/${movie.id}/credits`);
+      const creditsData = await creditsRes.json();
+      
+      // 3. 👇 COMBINE EVERYTHING: Overwrites the stripped database object with full data
+      // Ensure `genre_ids` is preserved/derived so rating preserves genre metadata
+      const derivedGenreIds: number[] =
+        (fullMovieData as any).genre_ids ??
+        (movie as any).genre_ids ??
+        ((fullMovieData as any).genres ? (fullMovieData as any).genres.map((g: any) => g.id) : []);
+
+      setSelectedMovie({ 
+        ...fullMovieData, 
+        cast: creditsData.cast,
+        genre_ids: derivedGenreIds
+      });
     } catch (err) {
-      console.error("Error fetching credits details:", err);
+      console.error("Error fetching comprehensive movie details:", err);
     } finally {
       setModalLoading(false);
     }

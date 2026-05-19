@@ -1,0 +1,7 @@
+backend/persisted
+frontend/persisted
+docker-data/
+frontend/backend-persisted
+frontend/frontend-persisted
+backend/backend-persisted
+backend/frontend-persisted

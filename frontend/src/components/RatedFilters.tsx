@@ -1,5 +1,4 @@
 import React from 'react';
-import { type RatedMovie } from '../types';
 
 interface RatedFiltersProps {
   ratedSearchQuery: string;
@@ -10,27 +9,47 @@ interface RatedFiltersProps {
   setRatedSelectedGenre: (val: string) => void;
   ratedSelectedYear: string;
   setRatedSelectedYear: (val: string) => void;
-  dbRatedMovies: RatedMovie[];
+  dbAllYears: string[];
+  dbAllGenres: number[];
 }
+
+// Map TMDB numerical genre IDs to readable labels
+const GENRE_MAP: { [key: number]: string } = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  99: "Documentary",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Music",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Sci-Fi",
+  10770: "TV Movie",
+  53: "Thriller",
+  10752: "War",
+  37: "Western"
+};
 
 export const RatedFilters: React.FC<RatedFiltersProps> = ({
   ratedSearchQuery, setRatedSearchQuery,
   ratedScoreFilter, setRatedScoreFilter,
   ratedSelectedGenre, setRatedSelectedGenre,
   ratedSelectedYear, setRatedSelectedYear,
-  dbRatedMovies
+  
+  // 👇 2. DESTRUCTURE THE NEW ARRAYS HERE
+  dbAllYears,
+  dbAllGenres
 }) => {
-
-const availableYears = Array.from(
-    new Set(
-      dbRatedMovies
-        .map(movie => movie.release_date?.substring(0, 4))
-        .filter(Boolean)
-    )
-).sort((a, b) => (b || "").localeCompare(a || ""));
 
   return (
     <div className="flex flex-col md:flex-row items-stretch gap-4 bg-gray-900 p-4 rounded-lg border border-gray-800 mb-8">
+      {/* --- TITLE TEXT SEARCH FIELD --- */}
       <div className="flex-1 min-w-[280px]">
         <input
           type="text" placeholder="Search your rated list by title..." value={ratedSearchQuery}
@@ -39,6 +58,7 @@ const availableYears = Array.from(
         />
       </div>
       
+      {/* --- SCORE RATING SELECTION --- */}
       <div className="w-full md:w-48">
         <select
           value={ratedScoreFilter} onChange={(e) => setRatedScoreFilter(e.target.value === "all" ? "all" : Number(e.target.value))}
@@ -53,25 +73,29 @@ const availableYears = Array.from(
         </select>
       </div>
 
+      {/* --- GENRE FILTER DROPDOWN --- */}
       <div className="w-full md:w-48">
         <select value={ratedSelectedGenre} onChange={(e) => setRatedSelectedGenre(e.target.value)} className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-purple-500 cursor-pointer text-sm">
           <option value="">All Genres</option>
-          <option value="28">Action</option>
-          <option value="35">Comedy</option>
-          <option value="18">Drama</option>
-          <option value="27">Horror</option>
-          <option value="878">Sci-Fi</option>
+          {/* 👇 3. LOOP DYNAMICALLY THROUGH ALL GENRES CURRENTLY PRESENT IN DB */}
+          {dbAllGenres.map((genreId) => (
+            <option key={genreId} value={genreId}>
+              {GENRE_MAP[genreId] || `Genre (${genreId})`}
+            </option>
+          ))}
         </select>
       </div>
 
+      {/* --- YEAR FILTER DROPDOWN --- */}
       <div className="w-full md:w-40">
         <select value={ratedSelectedYear} onChange={(e) => setRatedSelectedYear(e.target.value)} className="w-full h-full bg-gray-800 text-white px-4 py-2.5 rounded-md border border-gray-700 focus:outline-none focus:border-purple-500 cursor-pointer text-sm">
           <option value="">All Years</option>
-          {availableYears.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
+          {/* 👇 4. LOOP DYNAMICALLY THROUGH THE BACKEND'S MASTER YEARS LIST */}
+          {dbAllYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
         </select>
       </div>
     </div>

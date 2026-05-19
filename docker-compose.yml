@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tmdb_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-tmdb}
+      POSTGRES_USER: ${DB_USER:-tmdb_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tmdb_pass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-tmdb_user} -d ${DB_NAME:-tmdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: tmdb_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:-tmdb}
+      DB_USER: ${DB_USER:-tmdb_user}
+      DB_PASSWORD: ${DB_PASSWORD:-tmdb_pass}
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5000
+      FLASK_DEBUG: "true"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "python app.py"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: tmdb_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # The browser loads Vite from the host, so it should call localhost:5000
+      VITE_API_URL: http://localhost:5000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: >
+      sh -c "npm run dev -- --host 0.0.0.0 --port 5173"

@@ -1,15 +1,17 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
 import { RatedFilters } from './RatedFilters';
-import { type Movie, type RatedMovie } from '../types';
-import { API_BASE_URL } from '../config';
+import { type RatedMovie } from '../types';
 
 interface RatedMoviesTabProps {
   dbRatedMovies: RatedMovie[];
   filteredDatabaseMovies: RatedMovie[];
   userRatings: { [movieId: number]: number };
   setActiveTab: (tab: "search" | "rated") => void;
-  setSelectedMovie: (movie: Movie | null) => void;
+  
+  // Unified caching selection handler from App.tsx
+  selectMovieById: (movie: any) => void;
+  
   ratedSearchQuery: string;
   setRatedSearchQuery: (val: string) => void;
   ratedScoreFilter: number | "all";
@@ -18,11 +20,24 @@ interface RatedMoviesTabProps {
   setRatedSelectedGenre: (val: string) => void;
   ratedSelectedYear: string;
   setRatedSelectedYear: (val: string) => void;
+  
+  dbPage: number;
+  dbTotalPages: number;
+  setDbPage: (page: number) => void;
+
+  dbAllYears: string[];
+  dbAllGenres: number[];
 }
 
 export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
-  // Empty state handling
-  if (props.dbRatedMovies.length === 0) {
+  
+  const hasActiveFilters = 
+    props.ratedSearchQuery !== "" || 
+    props.ratedScoreFilter !== "all" || 
+    props.ratedSelectedGenre !== "" || 
+    props.ratedSelectedYear !== "";
+
+  if (props.dbRatedMovies.length === 0 && !hasActiveFilters) {
     return (
       <div className="text-center text-gray-400 text-lg mt-12 py-8 bg-gray-900/50 rounded-xl max-w-xl mx-auto border border-gray-800">
         <p className="mb-2">You haven't rated any movies yet!</p>
@@ -36,20 +51,6 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
     );
   }
 
-  const handleSavedMovieClick = async (movie: RatedMovie) => {
-    try {
-      const movieRes = await fetch(`${API_BASE_URL}/movie/${movie.id}`);
-      const movieData = await movieRes.json();
-      
-      const creditsRes = await fetch(`${API_BASE_URL}/movie/${movie.id}/credits`);
-      const creditsData = await creditsRes.json();
-      
-      props.setSelectedMovie({ ...movieData, cast: creditsData.cast });
-    } catch (err) {
-      console.error("Error loading comprehensive movie metadata:", err);
-    }
-  };
-
   return (
     <div>
       {/* --- RATED FILTER PANEL BAR --- */}
@@ -58,30 +59,57 @@ export const RatedMoviesTab: React.FC<RatedMoviesTabProps> = (props) => {
         ratedScoreFilter={props.ratedScoreFilter} setRatedScoreFilter={props.setRatedScoreFilter}
         ratedSelectedGenre={props.ratedSelectedGenre} setRatedSelectedGenre={props.setRatedSelectedGenre}
         ratedSelectedYear={props.ratedSelectedYear} setRatedSelectedYear={props.setRatedSelectedYear}
-        dbRatedMovies={props.dbRatedMovies}
+        dbAllYears={props.dbAllYears}
+        dbAllGenres={props.dbAllGenres}
       />
 
       {/* --- RATED MOVIES GRID SYSTEM --- */}
       {props.filteredDatabaseMovies.length === 0 ? (
         <p className="text-center text-gray-500 text-lg mt-8">No rated movies match your specific search criteria.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {props.filteredDatabaseMovies.map((movie) => (
-            <div key={movie.id} className="relative group cursor-pointer">
-              <MovieCard 
-                movie={{
-                  id: movie.id, title: movie.title, poster_path: movie.poster_path,
-                  overview: "", release_date: movie.release_date || "", 
-                  genre_ids: movie.genre_ids || [], vote_average: 0
-                }}
-                onClick={() => handleSavedMovieClick(movie)}
-                ratingLabel={`Your rating: ${props.userRatings[movie.id]} ★`} 
-              />
-              <div className="absolute top-2 left-2 bg-purple-600/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded shadow-md pointer-events-none">
-                {props.userRatings[movie.id]} ★
+        <div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+            {props.filteredDatabaseMovies.map((movie) => (
+              <div key={movie.id} className="relative group cursor-pointer">
+                {/* 👇 FIXED: Movie metadata object passed purely without hardcoded fields */}
+                <MovieCard 
+                  movie={movie as any} 
+                  onClick={() => props.selectMovieById(movie)}
+                  ratingLabel={`Your rating: ${props.userRatings[movie.id]} ★`} 
+                />
+                <div className="absolute top-2 left-2 bg-purple-600/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded shadow-md pointer-events-none">
+                  {props.userRatings[movie.id]} ★
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* --- PAGINATION BAR --- */}
+          {props.dbTotalPages > 1 && (
+            <div className="flex flex-col items-center justify-center space-y-2 mt-12 pt-6 border-t border-gray-900">
+              <div className="text-sm text-gray-400">
+                Page <strong className="text-white">{props.dbPage}</strong> of <strong className="text-white">{props.dbTotalPages}</strong>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <button
+                  disabled={props.dbPage === 1}
+                  onClick={() => props.setDbPage(props.dbPage - 1)}
+                  className="w-40 py-2 bg-gray-900 border border-gray-800 rounded-md hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-semibold text-white cursor-pointer flex items-center justify-center"
+                >
+                  Previous Page
+                </button>
+
+                <button
+                  disabled={props.dbPage === props.dbTotalPages}
+                  onClick={() => props.setDbPage(props.dbPage + 1)}
+                  className="w-40 py-2 bg-gray-900 border border-gray-800 rounded-md hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-semibold text-white cursor-pointer flex items-center justify-center"
+                >
+                  Next Page
+                </button>
               </div>
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>
