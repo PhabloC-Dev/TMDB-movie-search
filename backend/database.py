@@ -6,10 +6,8 @@ from pathlib import Path
 
 os.environ['PGCLIENTENCODING'] = 'utf-8'
 
-# Load .env from project root
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
-
 
 def get_conn():
     """Create a fresh database connection"""
@@ -26,12 +24,10 @@ def get_conn():
         print(f"[ERROR] Database connection failed: {e}")
         raise
 
-
 def close_conn(conn):
     """Close the database connection"""
     if conn:
         conn.close()
-
 
 def init_db():
     """Initialize the database schema if necessary."""
